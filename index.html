@@ -195,6 +195,9 @@ tr:hover td{background:#fafbfd}
     <div class="card">
       <div class="filtro-wrap">
         <input type="text" id="filtro-txt" placeholder="Filtrar por motorista, veículo, cidade, SEI..." oninput="renderTabela()"/>
+        <select id="filtro-ano" onchange="filtrarAno()">
+          <option value="">Todos os anos</option>
+        </select>
         <select id="filtro-mes" onchange="renderTabela()">
           <option value="">Todos os meses</option>
         </select>
@@ -444,19 +447,21 @@ function atualizarBadge(){document.getElementById("badge-count").textContent=reg
 
 function popularMeses(){
   const meses=[...new Set(registros.map(r=>r.data?r.data.slice(0,7):""))].filter(Boolean).sort().reverse();
-  const selExpAno=document.getElementById("export-ano");
-  if(selExpAno){
-    while(selExpAno.options.length>1)selExpAno.remove(1);
-    anos.forEach(a=>{
-      const o=document.createElement("option");
-      o.value=a; o.textContent=a; selExpAno.appendChild(o);
-    });
+  const anos=[...new Set(meses.map(m=>m.slice(0,4)))].sort().reverse();
+  const selAno=document.getElementById("filtro-ano");
+  if(selAno){
+    const valAno=selAno.value;
+    while(selAno.options.length>1)selAno.remove(1);
+    anos.forEach(a=>{const o=document.createElement("option");o.value=a;o.textContent=a;selAno.appendChild(o);});
+    if(valAno)selAno.value=valAno;
   }
   ["filtro-mes","export-mes"].forEach(id=>{
     const sel=document.getElementById(id); if(!sel)return;
     const val=sel.value;
     while(sel.options.length>1)sel.remove(1);
-    meses.forEach(m=>{
+    const anoFiltro=document.getElementById("filtro-ano")?.value||"";
+    const mesFiltrados=anoFiltro?meses.filter(m=>m.startsWith(anoFiltro)):meses;
+    mesFiltrados.forEach(m=>{
       const o=document.createElement("option"); o.value=m;
       const[ano,mes]=m.split("-");
       const nomes=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
@@ -464,6 +469,11 @@ function popularMeses(){
     });
     if(val)sel.value=val;
   });
+}
+
+function filtrarAno(){
+  popularMeses();
+  renderTabela();
 }
 
 async function registrar() {
@@ -621,7 +631,8 @@ function atualizarResumoExport(){
   const anoExp=document.getElementById("export-ano")?.value||"";
 const lista=registros.filter(r=>{
   const okAno=!anoExp||(r.data&&r.data.startsWith(anoExp));
-  const okMes=!mes||(r.data&&r.data.startsWith(mes));
+  const anoSel=document.getElementById("filtro-ano")?.value||"";
+    const okMes=(!mes||(r.data&&r.data.startsWith(mes)))&&(!anoSel||(r.data&&r.data.startsWith(anoSel)));
   return okAno&&okMes;
 });
   let totalExtrasMin=0;
