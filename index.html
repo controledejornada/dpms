@@ -688,6 +688,21 @@ function verificarSenha(){
   } else { document.getElementById("erro-senha").style.display="block"; }
 }
 
+function filtrarAnoExport(){
+  const ano=document.getElementById("export-ano").value;
+  const sel=document.getElementById("export-mes");
+  const meses=[...new Set(registros.map(r=>r.data?r.data.slice(0,7):""))].filter(Boolean).sort().reverse();
+  const mesFiltrados=ano?meses.filter(m=>m.startsWith(ano)):meses;
+  while(sel.options.length>1)sel.remove(1);
+  const nomes=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  mesFiltrados.forEach(m=>{
+    const[a,ms]=m.split("-");
+    const o=document.createElement("option");
+    o.value=m; o.textContent=`${nomes[parseInt(ms)]} ${a}`;
+    sel.appendChild(o);
+  });
+  atualizarResumoExport();
+}
 function atualizarResumoExport(){
   const mes=document.getElementById("export-mes")?.value||"";
   const anoExp=document.getElementById("export-ano")?.value||"";
