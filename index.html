@@ -604,7 +604,12 @@ function verificarSenha(){
 
 function atualizarResumoExport(){
   const mes=document.getElementById("export-mes")?.value||"";
-  const lista=mes?registros.filter(r=>r.data&&r.data.startsWith(mes)):registros;
+  const anoExp=document.getElementById("export-ano")?.value||"";
+const lista=registros.filter(r=>{
+  const okAno=!anoExp||(r.data&&r.data.startsWith(anoExp));
+  const okMes=!mes||(r.data&&r.data.startsWith(mes));
+  return okAno&&okMes;
+});
   let totalExtrasMin=0;
   lista.forEach(r=>{const{extrasMin}=calcularExtras(r.data,r.saida,r.retorno,r.intervalo_fruido,r.eh_feriado);totalExtrasMin+=extrasMin||0;});
   const fmtMin=m=>`${Math.floor(m/60)}h${(m%60).toString().padStart(2,"0")}min`;
