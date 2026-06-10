@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Controle de Horas Extras — DPE-MS</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f4f6f9;color:#1a1a1a;font-size:15px;line-height:1.6}
+header{background:#1a3a5c;color:#fff;padding:1.2rem 2rem}
+header h1{font-size:18px;font-weight:600}
+header p{font-size:13px;opacity:.75;margin-top:2px}
+.container{max-width:920px;margin:0 auto;padding:1.5rem 1rem 3rem}
+.abas{display:flex;gap:4px;margin-bottom:1.5rem;border-bottom:1px solid #dde3ec;flex-wrap:wrap}
+.aba{padding:9px 18px;font-size:14px;cursor:pointer;border:none;background:transparent;color:#666;border-bottom:2px solid transparent;font-family:inherit;transition:color .15s}
+.aba.ativa{color:#1a3a5c;border-bottom-color:#1a3a5c;font-weight:600}
+.aba:hover{color:#1a3a5c}
+.card{background:#fff;border-radius:10px;border:1px solid #dde3ec;padding:1.5rem;margin-bottom:1rem}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:14px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:14px}
+label{display:block;font-size:12px;color:#555;margin-bottom:5px;font-weight:500}
+.obrig{color:#c0392b}
+input[type=text],input[type=date],input[type=time],input[type=password],input[type=file],textarea,select{
+  width:100%;padding:9px 12px;border:1px solid #cdd5e0;border-radius:7px;
+  font-size:14px;font-family:inherit;background:#fff;color:#1a1a1a;transition:border .15s}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#1a3a5c;box-shadow:0 0 0 3px rgba(26,58,92,.1)}
+textarea{resize:vertical;min-height:70px}
+.campo{margin-bottom:14px}
+.btn{padding:10px 20px;font-size:14px;cursor:pointer;border-radius:7px;border:1px solid #cdd5e0;background:#fff;color:#1a1a1a;font-family:inherit;transition:background .15s}
+.btn:hover{background:#f0f4fa}
+.btn-primary{background:#1a3a5c;color:#fff;border-color:#1a3a5c}
+.btn-primary:hover{background:#15304d}
+.btn-success{background:#1a7a4a;color:#fff;border-color:#1a7a4a}
+.btn-success:hover{background:#156040}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.toggle-group{display:flex;gap:0;border:1px solid #cdd5e0;border-radius:7px;overflow:hidden}
+.toggle-btn{flex:1;padding:9px 10px;font-size:13px;cursor:pointer;border:none;background:#fff;color:#555;font-family:inherit;transition:background .15s;text-align:center}
+.toggle-btn.ativo{background:#1a3a5c;color:#fff;font-weight:600}
+.sucesso{margin-top:14px;padding:11px 14px;background:#eaf7f0;color:#1a7a4a;border-radius:7px;font-size:14px}
+.erro-msg{margin-top:14px;padding:11px 14px;background:#fdecea;color:#c0392b;border-radius:7px;font-size:14px}
+.info-box{background:#e8f0fe;border-radius:7px;padding:10px 14px;font-size:13px;color:#1a3a5c;margin-bottom:14px}
+.filtro-wrap{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.filtro-wrap input,.filtro-wrap select{flex:1;min-width:140px}
+.tabela-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:9px 8px;border-bottom:1px solid #dde3ec;color:#666;font-weight:600;font-size:11px;white-space:nowrap;background:#f8fafc}
+td{padding:8px 8px;border-bottom:1px solid #f0f3f7;color:#1a1a1a;vertical-align:top}
+tr:hover td{background:#fafbfd}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600}
+.badge-extra{background:#fff3cd;color:#856404}
+.badge-zero{background:#d1ecf1;color:#0c5460}
+.badge-feriado{background:#f8d7da;color:#721c24}
+.badge-sabdom{background:#e2d9f3;color:#432874}
+.btn-del{background:none;border:none;cursor:pointer;color:#aaa;font-size:15px;padding:0 4px}
+.btn-del:hover{color:#c0392b}
+.vazio{text-align:center;padding:2.5rem;color:#999;font-size:14px}
+.nota{font-size:12px;color:#888;margin-top:8px}
+.export-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.senha-wrap{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.erro-txt{font-size:12px;color:#c0392b;margin-top:4px}
+.foto-preview{margin-top:8px}
+.foto-preview img{max-width:100%;max-height:180px;border-radius:7px;border:1px solid #dde3ec}
+.gps-info{font-size:12px;color:#1a7a4a;margin-top:6px}
+.total-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:1.5rem}
+.total-card{background:#fff;border:1px solid #dde3ec;border-radius:8px;padding:12px 16px;text-align:center}
+.total-card .val{font-size:22px;font-weight:600;color:#1a3a5c}
+.total-card .lbl{font-size:11px;color:#888;margin-top:2px}
+.loading{text-align:center;padding:2rem;color:#888;font-size:14px}
+@media(max-width:600px){header{padding:1rem}.container{padding:1rem .75rem 3rem}.card{padding:1rem}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Controle de Horas Extras</h1>
+  <p>Defensoria Pública do Estado de Mato Grosso do Sul</p>
+</header>
+
+<div class="container">
+  <div class="abas">
+    <button class="aba ativa" onclick="mostrarAba('form',this)">Novo lançamento</button>
+    <button class="aba" onclick="mostrarAba('registros',this)">Registros <span id="badge-count" style="background:#e8eef7;color:#1a3a5c;font-size:11px;padding:2px 8px;border-radius:20px;margin-left:4px">0</span></button>
+    <button class="aba" onclick="mostrarAba('exportar',this)">Exportar</button>
+  </div>
+
+  <!-- FORMULÁRIO -->
+  <div id="aba-form" class="card">
+    <div class="grid3">
+      <div>
+        <label>Data <span class="obrig">*</span></label>
+        <input type="date" id="f-data" onchange="verificarDia()"/>
+      </div>
+      <div>
+        <label>Horário de entrada <span class="obrig">*</span></label>
+        <input type="time" id="f-saida" onchange="calcularHoras()"/>
+      </div>
+      <div>
+        <label>Horário de saída <span class="obrig">*</span></label>
+        <input type="time" id="f-retorno" onchange="calcularHoras()"/>
+      </div>
+    </div>
+
+    <div id="dia-info" class="info-box" style="display:none"></div>
+
+    <div class="grid2" style="margin-bottom:14px">
+      <div>
+        <label>Intervalo de descanso usufruído?</label>
+        <div class="toggle-group">
+          <button class="toggle-btn ativo" id="tog-sim" onclick="setIntervalo(true)">✓ Sim (30 min)</button>
+          <button class="toggle-btn" id="tog-nao" onclick="setIntervalo(false)">✗ Não usufruído</button>
+        </div>
+      </div>
+      <div>
+        <label>Marcar como feriado?</label>
+        <div class="toggle-group">
+          <button class="toggle-btn ativo" id="tog-nferiado" onclick="setFeriado(false)">Dia normal</button>
+          <button class="toggle-btn" id="tog-feriado" onclick="setFeriado(true)">🔴 Feriado</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="resultado-horas" class="info-box" style="display:none;background:#eaf7f0;color:#1a7a4a"></div>
+
+    <div class="grid2">
+      <div>
+        <label>Nome do motorista <span class="obrig">*</span></label>
+        <input type="text" id="f-motorista" placeholder="Nome completo"/>
+      </div>
+      <div>
+        <label>Veículo <span class="obrig">*</span></label>
+        <input type="text" id="f-veiculo" placeholder="Ex: Hilux Branca — ABC-1234"/>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <label>Cidade de origem <span class="obrig">*</span></label>
+        <select id="f-origem" onchange="atualizarDestino()">
+          <option value="">Selecione a origem...</option>
+        </select>
+      </div>
+      <div>
+        <label>Cidade de destino <span class="obrig">*</span></label>
+        <select id="f-destino">
+          <option value="">Selecione primeiro a origem...</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label>Processo SEI nº</label>
+      <input type="text" id="f-sei" placeholder="Ex: 14.000123/2024-01"/>
+    </div>
+
+    <div class="campo">
+      <label>Coordenadas GPS do destino</label>
+      <div class="btn-row">
+        <button class="btn" onclick="capturarGPS()">📍 Capturar localização atual</button>
+        <span class="gps-info" id="gps-info"></span>
+      </div>
+      <input type="hidden" id="f-lat"/>
+      <input type="hidden" id="f-lng"/>
+    </div>
+
+    <div class="campo">
+      <label>Foto / Comprovante</label>
+      <div class="btn-row">
+        <label class="btn" style="cursor:pointer;display:inline-block">
+          📁 Carregar arquivo
+          <input type="file" id="f-foto-file" accept="image/*" style="display:none" onchange="previewFoto(this)"/>
+        </label>
+        <label class="btn" style="cursor:pointer;display:inline-block">
+          📷 Câmera
+          <input type="file" id="f-foto-cam" accept="image/*" capture="environment" style="display:none" onchange="previewFoto(this)"/>
+        </label>
+      </div>
+      <div class="foto-preview" id="foto-preview"></div>
+    </div>
+
+    <div class="campo">
+      <label>Observações</label>
+      <textarea id="f-obs" placeholder="Passageiros, finalidade, informações adicionais..."></textarea>
+    </div>
+
+    <button class="btn btn-primary" onclick="registrar()">Registrar lançamento</button>
+    <p class="nota"><span class="obrig">*</span> Campos obrigatórios</p>
+    <div id="msg-sucesso" style="display:none" class="sucesso">✓ Lançamento registrado com sucesso!</div>
+    <div id="msg-erro" style="display:none" class="erro-msg"></div>
+  </div>
+
+  <!-- REGISTROS -->
+  <div id="aba-registros" style="display:none">
+    <div class="total-bar" id="total-bar"></div>
+    <div class="card">
+      <div class="filtro-wrap">
+        <input type="text" id="filtro-txt" placeholder="Filtrar por motorista, veículo, cidade, SEI..." oninput="renderTabela()"/>
+        <select id="filtro-mes" onchange="renderTabela()">
+          <option value="">Todos os meses</option>
+        </select>
+      </div>
+      <div class="tabela-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Dia</th>
+              <th>Motorista</th>
+              <th>Veículo</th>
+              <th>Origem</th>
+              <th>Destino</th>
+              <th>Entrada</th>
+              <th>Saída</th>
+              <th>Total</th>
+              <th>H. Extras</th>
+              <th>Intervalo</th>
+              <th>SEI Nº</th>
+              <th>GPS</th>
+              <th>Foto</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tabela-body"></tbody>
+        </table>
+        <div id="tabela-vazio" class="vazio" style="display:none">Nenhum registro encontrado.</div>
+        <div id="tabela-loading" class="loading">Carregando registros...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPORTAR -->
+  <div id="aba-exportar" style="display:none">
+    <div class="card">
+      <div id="exportar-bloqueado">
+        <p style="font-size:14px;color:#555;margin-bottom:12px">Informe a senha para acessar a exportação.</p>
+        <div class="senha-wrap">
+          <input type="password" id="senha-input" placeholder="Senha de exportação" style="width:220px" onkeydown="if(event.key==='Enter')verificarSenha()"/>
+          <button class="btn btn-primary" onclick="verificarSenha()">Acessar</button>
+        </div>
+        <div id="erro-senha" class="erro-txt" style="display:none">Senha incorreta.</div>
+        <p class="nota">Senha padrão: <strong>dpms2026</strong></p>
+      </div>
+      <div id="exportar-liberado" style="display:none">
+        <div class="grid2" style="margin-bottom:16px">
+          <div>
+            <label>Selecionar mês para exportação</label>
+            <select id="export-mes" onchange="atualizarResumoExport()">
+              <option value="">Todos os registros</option>
+            </select>
+          </div>
+        </div>
+        <div id="export-resumo" class="info-box" style="margin-bottom:16px"></div>
+        <div class="export-row">
+          <button class="btn btn-primary" onclick="exportCSV()">↓ Exportar CSV (Excel)</button>
+          <button class="btn" onclick="exportPrint()">⎙ Imprimir / Salvar PDF</button>
+        </div>
+        <p class="nota">O nome do arquivo será: <em>"Relatório de Horas Extras - [Mês Selecionado].csv"</em></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = "https://vktbvcwmrijztcxjypls.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrdGJ2Y3dtcmlqenRjeGp5cGxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyOTQ0MDksImV4cCI6MjA5NTg3MDQwOX0.LFee_HNOHmh21hFD04-_yLjFxpI5auiTJq14brmbbf8";
+const SENHA = "dpms2026";
+
+const CIDADES_MS = [
+  "Água Clara","Alcinópolis","Amambaí","Anastácio","Anaurilândia","Angélica","Antônio João",
+  "Aparecida do Taboado","Aquidauana","Aral Moreira","Bandeirantes","Bataguassu","Batayporã",
+  "Bela Vista","Bodoquena","Bonito","Brasilândia","Caarapó","Camapuã","Campo Grande",
+  "Caracol","Cassilândia","Chapadão do Sul","Corguinho","Coronel Sapucaia","Corumbá",
+  "Costa Rica","Coxim","Deodápolis","Dois Irmãos do Buriti","Douradina","Dourados",
+  "Eldorado","Fátima do Sul","Figueirão","Glória de Dourados","Guia Lopes da Laguna",
+  "Iguatemi","Inocência","Itaporã","Itaquiraí","Ivinhema","Japorã","Jaraguari","Jardim",
+  "Jateí","Juti","Ladário","Laguna Carapã","Maracaju","Miranda","Mundo Novo","Naviraí",
+  "Nioaque","Nova Alvorada do Sul","Nova Andradina","Novo Horizonte do Sul","Paraíso das Águas",
+  "Paranaíba","Paranhos","Pedro Gomes","Ponta Porã","Porto Murtinho","Ribas do Rio Pardo",
+  "Rio Brilhante","Rio Negro","Rio Verde de Mato Grosso","Rochedo","Santa Rita do Pardo",
+  "São Gabriel do Oeste","Selvíria","Sete Quedas","Sidrolândia","Sonora","Tacuru","Taquarussu",
+  "Terenos","Três Lagoas","Vicentina","Serviço Interno"
+];
+
+let registros = [];
+let fotoBase64 = null;
+let intervaloFruido = true;
+let ehFeriado = false;
+
+window.onload = () => {
+  popularCidades();
+  carregarRegistros();
+  document.getElementById("f-data").value = new Date().toISOString().split("T")[0];
+  verificarDia();
+};
+
+function popularCidades() {
+  const sel = document.getElementById("f-origem");
+  CIDADES_MS.forEach(c => {
+    const o = document.createElement("option");
+    o.value = c; o.textContent = c; sel.appendChild(o);
+  });
+}
+
+function atualizarDestino() {
+  const origem = document.getElementById("f-origem").value;
+  const sel = document.getElementById("f-destino");
+  sel.innerHTML = '<option value="">Selecione o destino...</option>';
+  CIDADES_MS.forEach(c => {
+    if (c !== origem) {
+      const o = document.createElement("option");
+      o.value = c; o.textContent = c; sel.appendChild(o);
+    }
+  });
+}
+
+function setIntervalo(val) {
+  intervaloFruido = val;
+  document.getElementById("tog-sim").classList.toggle("ativo", val);
+  document.getElementById("tog-nao").classList.toggle("ativo", !val);
+  calcularHoras();
+}
+
+function setFeriado(val) {
+  ehFeriado = val;
+  document.getElementById("tog-nferiado").classList.toggle("ativo", !val);
+  document.getElementById("tog-feriado").classList.toggle("ativo", val);
+  calcularHoras(); verificarDia();
+}
+
+function verificarDia() {
+  const data = document.getElementById("f-data").value;
+  if (!data) return;
+  const d = new Date(data + "T12:00:00");
+  const dias = ["Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado"];
+  const nomeDia = dias[d.getDay()];
+  const box = document.getElementById("dia-info");
+  box.style.display = "block";
+  if (ehFeriado) {
+    box.style.background = "#f8d7da"; box.style.color = "#721c24";
+    box.textContent = `🔴 ${nomeDia} — marcado como FERIADO. Todas as horas contam como extras.`;
+  } else if (d.getDay() === 0 || d.getDay() === 6) {
+    box.style.background = "#e2d9f3"; box.style.color = "#432874";
+    box.textContent = `${nomeDia} — final de semana. Todas as horas contam como extras.`;
+  } else {
+    box.style.background = "#e8f0fe"; box.style.color = "#1a3a5c";
+    box.textContent = `${nomeDia} — dia útil. Horas extras após 7h trabalhadas (ou 6h30 se intervalo não fruído).`;
+  }
+  calcularHoras();
+}
+
+function calcularHoras() {
+  const entrada = document.getElementById("f-saida").value;
+  const saida   = document.getElementById("f-retorno").value;
+  const data    = document.getElementById("f-data").value;
+  const res     = document.getElementById("resultado-horas");
+  if (!entrada || !saida || !data) { res.style.display = "none"; return; }
+  const [eh, em] = entrada.split(":").map(Number);
+  const [sh, sm] = saida.split(":").map(Number);
+  let totalMin = (sh*60+sm)-(eh*60+em);
+  if (totalMin <= 0) totalMin += 24*60;
+  const dow = new Date(data+"T12:00:00").getDay();
+  const fimSemana = dow===0||dow===6;
+  let extrasMin = 0;
+  if (fimSemana||ehFeriado) { extrasMin = totalMin; }
+  else { extrasMin = Math.max(0, totalMin-(intervaloFruido?420:390)); }
+  const fmt = m => `${Math.floor(Math.abs(m)/60)}h${(Math.abs(m)%60).toString().padStart(2,"0")}min`;
+  res.style.display = "block";
+  if (extrasMin > 0) {
+    res.style.background="#eaf7f0"; res.style.color="#1a7a4a";
+    res.textContent = `⏱ Total trabalhado: ${fmt(totalMin)} | Horas extras: ${fmt(extrasMin)}`;
+  } else {
+    res.style.background="#e8f0fe"; res.style.color="#1a3a5c";
+    res.textContent = `⏱ Total trabalhado: ${fmt(totalMin)} | Sem horas extras`;
+  }
+}
+
+function calcularExtras(data, entrada, saida, fruido, feriado) {
+  if (!entrada||!saida||!data) return {total:"—",extras:"0h00min",extrasMin:0,totalMin:0};
+  const [eh,em]=entrada.split(":").map(Number);
+  const [sh,sm]=saida.split(":").map(Number);
+  let totalMin=(sh*60+sm)-(eh*60+em);
+  if (totalMin<=0) totalMin+=24*60;
+  const dow=new Date(data+"T12:00:00").getDay();
+  const fimSemana=dow===0||dow===6;
+  let extrasMin=0;
+  if (fimSemana||feriado){extrasMin=totalMin;}
+  else{extrasMin=Math.max(0,totalMin-(fruido?420:390));}
+  const fmt=m=>`${Math.floor(m/60)}h${(m%60).toString().padStart(2,"0")}min`;
+  return {total:fmt(totalMin),extras:fmt(extrasMin),extrasMin,totalMin};
+}
+
+function fmtData(data) {
+  if (!data) return "";
+  const [a,m,d]=data.split("-");
+  return `${d}/${m}/${a}`;
+}
+
+function capturarGPS() {
+  const info = document.getElementById("gps-info");
+  info.textContent = "Obtendo localização...";
+  if (!navigator.geolocation){info.textContent="GPS não suportado.";return;}
+  navigator.geolocation.getCurrentPosition(pos=>{
+    document.getElementById("f-lat").value=pos.coords.latitude;
+    document.getElementById("f-lng").value=pos.coords.longitude;
+    info.textContent=`📍 ${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
+  },()=>{info.textContent="Não foi possível obter localização.";});
+}
+
+function previewFoto(input) {
+  if (!input.files||!input.files[0]) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    fotoBase64=e.target.result;
+    document.getElementById("foto-preview").innerHTML=`<img src="${fotoBase64}" alt="preview"/>`;
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+async function sbFetch(path, opts={}) {
+  const r = await fetch(SUPABASE_URL+path,{
+    ...opts,
+    headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,
+      "Content-Type":"application/json","Prefer":"return=representation",...(opts.headers||{})}
+  });
+  return r.json();
+}
+
+async function carregarRegistros() {
+  try {
+    const data = await sbFetch("/rest/v1/controle_de_horas?select=*&order=data.desc,criado_em.desc");
+    registros = Array.isArray(data) ? data : [];
+  } catch { registros=[]; }
+  atualizarBadge(); popularMeses();
+  if (document.getElementById("aba-registros").style.display!=="none") renderTabela();
+}
+
+function atualizarBadge(){document.getElementById("badge-count").textContent=registros.length;}
+
+function popularMeses(){
+  const meses=[...new Set(registros.map(r=>r.data?r.data.slice(0,7):""))].filter(Boolean).sort().reverse();
+  ["filtro-mes","export-mes"].forEach(id=>{
+    const sel=document.getElementById(id); if(!sel)return;
+    const val=sel.value;
+    while(sel.options.length>1)sel.remove(1);
+    meses.forEach(m=>{
+      const o=document.createElement("option"); o.value=m;
+      const[ano,mes]=m.split("-");
+      const nomes=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+      o.textContent=`${nomes[parseInt(mes)]} ${ano}`; sel.appendChild(o);
+    });
+    if(val)sel.value=val;
+  });
+}
+
+async function registrar() {
+  const data      = document.getElementById("f-data").value;
+  const motorista = document.getElementById("f-motorista").value.trim();
+  const veiculo   = document.getElementById("f-veiculo").value.trim();
+  const origem    = document.getElementById("f-origem").value;
+  const destino   = document.getElementById("f-destino").value;
+  const saida     = document.getElementById("f-saida").value;
+  const retorno   = document.getElementById("f-retorno").value;
+  const sei       = document.getElementById("f-sei").value.trim();
+  const obs       = document.getElementById("f-obs").value.trim();
+  const lat       = document.getElementById("f-lat").value;
+  const lng       = document.getElementById("f-lng").value;
+
+  if (!data||!motorista||!veiculo||!origem||!destino||!saida||!retorno) {
+    mostrarMsg("erro","Preencha os campos obrigatórios: Data, Motorista, Veículo, Origem, Destino, Entrada e Saída.");
+    return;
+  }
+
+  const d=new Date(data+"T12:00:00");
+  const dias=["Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado"];
+  const{total,extras}=calcularExtras(data,saida,retorno,intervaloFruido,ehFeriado);
+
+  const payload={
+    data,motorista,veiculo,origem,destino,saida,retorno,sei,observacoes:obs,
+    dia_semana:dias[d.getDay()],eh_feriado:ehFeriado,intervalo_fruido:intervaloFruido,
+    total_trabalhado:total,horas_extras:extras,
+    latitude:lat?parseFloat(lat):null,longitude:lng?parseFloat(lng):null,
+    foto_url:fotoBase64||null
+  };
+
+  const btn=document.querySelector("#aba-form .btn-primary");
+  btn.textContent="Salvando..."; btn.disabled=true;
+
+  try {
+    const res=await sbFetch("/rest/v1/controle_de_horas",{method:"POST",body:JSON.stringify(payload)});
+    if (Array.isArray(res)&&res.length>0){
+      registros.unshift(res[0]);
+      atualizarBadge(); popularMeses(); limparForm();
+      mostrarMsg("sucesso","✓ Lançamento registrado com sucesso!");
+    } else { mostrarMsg("erro","Erro ao salvar. Verifique o banco e tente novamente."); }
+  } catch { mostrarMsg("erro","Erro de conexão. Tente novamente."); }
+
+  btn.textContent="Registrar lançamento"; btn.disabled=false;
+}
+
+async function excluir(id) {
+  if (!confirm("Confirma a exclusão deste registro?")) return;
+  try {
+    await sbFetch(`/rest/v1/controle_de_horas?id=eq.${id}`,{method:"DELETE",headers:{"Prefer":""}});
+    registros=registros.filter(r=>r.id!==id);
+    atualizarBadge(); popularMeses(); renderTabela();
+  } catch { alert("Erro ao excluir."); }
+}
+
+function limparForm(){
+  ["f-motorista","f-veiculo","f-sei","f-obs"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("f-saida").value="";
+  document.getElementById("f-retorno").value="";
+  document.getElementById("f-lat").value="";
+  document.getElementById("f-lng").value="";
+  document.getElementById("f-origem").value="";
+  document.getElementById("f-destino").innerHTML='<option value="">Selecione primeiro a origem...</option>';
+  document.getElementById("foto-preview").innerHTML="";
+  document.getElementById("gps-info").textContent="";
+  document.getElementById("resultado-horas").style.display="none";
+  fotoBase64=null; setIntervalo(true); setFeriado(false);
+}
+
+function mostrarMsg(tipo,txt){
+  const s=document.getElementById("msg-sucesso"),e=document.getElementById("msg-erro");
+  s.style.display="none"; e.style.display="none";
+  if(tipo==="sucesso"){s.textContent=txt;s.style.display="block";setTimeout(()=>s.style.display="none",4000);}
+  else{e.textContent=txt;e.style.display="block";setTimeout(()=>e.style.display="none",5000);}
+}
+
+function mostrarAba(nome,btn){
+  ["form","registros","exportar"].forEach(a=>{
+    const el=document.getElementById("aba-"+a); if(el)el.style.display="none";
+  });
+  document.querySelectorAll(".aba").forEach(b=>b.classList.remove("ativa"));
+  document.getElementById("aba-"+nome).style.display="block";
+  btn.classList.add("ativa");
+  if(nome==="registros"){carregarRegistros();}
+  if(nome==="exportar")atualizarResumoExport();
+}
+
+function renderTabela(){
+  document.getElementById("tabela-loading").style.display="none";
+  const filtro=(document.getElementById("filtro-txt")?.value||"").toLowerCase();
+  const mes=document.getElementById("filtro-mes")?.value||"";
+  const lista=registros.filter(r=>{
+    const ok=[r.motorista,r.veiculo,r.destino,r.origem,r.sei,r.data].some(v=>(v||"").toLowerCase().includes(filtro));
+    const okMes=!mes||(r.data&&r.data.startsWith(mes));
+    return ok&&okMes;
+  });
+
+  const tbody=document.getElementById("tabela-body");
+  const vazio=document.getElementById("tabela-vazio");
+  tbody.innerHTML="";
+
+  let totalExtrasMin=0;
+  lista.forEach(r=>{const{extrasMin}=calcularExtras(r.data,r.saida,r.retorno,r.intervalo_fruido,r.eh_feriado);totalExtrasMin+=extrasMin||0;});
+  const fmtMin=m=>`${Math.floor(m/60)}h${(m%60).toString().padStart(2,"0")}min`;
+  document.getElementById("total-bar").innerHTML=`
+    <div class="total-card"><div class="val">${lista.length}</div><div class="lbl">Registros</div></div>
+    <div class="total-card"><div class="val" style="color:#1a7a4a">${fmtMin(totalExtrasMin)}</div><div class="lbl">Total horas extras</div></div>`;
+
+  if(lista.length===0){
+    vazio.style.display="block";
+    vazio.textContent=registros.length===0?"Nenhum lançamento registrado ainda.":"Nenhum resultado.";
+    return;
+  }
+  vazio.style.display="none";
+  lista.forEach(r=>{
+    const{total,extras,extrasMin}=calcularExtras(r.data,r.saida,r.retorno,r.intervalo_fruido,r.eh_feriado);
+    const dow=r.data?new Date(r.data+"T12:00:00").getDay():-1;
+    const fimSemana=dow===0||dow===6;
+    let tipoBadge="badge-zero";
+    if(r.eh_feriado)tipoBadge="badge-feriado";
+    else if(fimSemana)tipoBadge="badge-sabdom";
+    else if(extrasMin>0)tipoBadge="badge-extra";
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${fmtData(r.data)}</td>
+      <td><span class="badge ${tipoBadge}">${r.dia_semana||""}</span></td>
+      <td>${r.motorista||""}</td>
+      <td>${r.veiculo||"—"}</td>
+      <td>${r.origem||""}</td>
+      <td>${r.destino||""}</td>
+      <td>${r.saida||""}</td>
+      <td>${r.retorno||""}</td>
+      <td>${total}</td>
+      <td><span class="badge ${extrasMin>0?'badge-extra':'badge-zero'}">${extras}</span></td>
+      <td style="text-align:center">${r.intervalo_fruido?"✓":"✗"}</td>
+      <td>${r.sei||"—"}</td>
+      <td style="text-align:center">${r.latitude?`<a href="https://maps.google.com/?q=${r.latitude},${r.longitude}" target="_blank">📍</a>`:"—"}</td>
+      <td style="text-align:center">${r.foto_url?`<a href="${r.foto_url}" target="_blank">🖼️</a>`:"—"}</td>
+      <td><button class="btn-del" title="Excluir" onclick="excluir(${r.id})">✕</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function verificarSenha(){
+  if(document.getElementById("senha-input").value===SENHA){
+    document.getElementById("exportar-bloqueado").style.display="none";
+    document.getElementById("exportar-liberado").style.display="block";
+    atualizarResumoExport();
+  } else { document.getElementById("erro-senha").style.display="block"; }
+}
+
+function atualizarResumoExport(){
+  const mes=document.getElementById("export-mes")?.value||"";
+  const lista=mes?registros.filter(r=>r.data&&r.data.startsWith(mes)):registros;
+  let totalExtrasMin=0;
+  lista.forEach(r=>{const{extrasMin}=calcularExtras(r.data,r.saida,r.retorno,r.intervalo_fruido,r.eh_feriado);totalExtrasMin+=extrasMin||0;});
+  const fmtMin=m=>`${Math.floor(m/60)}h${(m%60).toString().padStart(2,"0")}min`;
+  const box=document.getElementById("export-resumo");
+  if(box)box.textContent=`${lista.length} registro(s) | Total de horas extras: ${fmtMin(totalExtrasMin)}`;
+}
+
+function nomeMes(mes){
+  if(!mes)return"Todos os Períodos";
+  const[ano,m]=mes.split("-");
+  const nomes=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  return`${nomes[parseInt(m)]} ${ano}`;
+}
+
+function exportCSV(){
+  const mes=document.getElementById("export-mes").value;
+  const lista=mes?registros.filter(r=>r.data&&r.data.startsWith(mes)):registros;
+  const cab=["Data","Dia da Semana","Motorista","Veículo","Origem","Destino","Entrada","Saída","Total Trabalhado","Horas Extras","Intervalo","Feriado","SEI Nº","Latitude","Longitude","Observações"];
+  const linhas=lista.map(r=>{
+    const{total,extras}=calcularExtras(r.data,r.saida,r.retorno,r.intervalo_fruido,r.eh_feriado);
+    return[fmtData(r.data),r.dia_semana,r.motorista,r.veiculo||"",r.origem,r.destino,
+      r.saida,r.retorno,total,extras,
+      r.intervalo_fruido?"Sim":"Não",r.eh_feriado?"Sim":"Não",
+      r.sei||"",r.latitude||"",r.longitude||"",r.observacoes||""]
+      .map(v=>`"${(v||"").toString().replace(/"/g,'""')}"`).join(",");
+  });
+  const csv="\uFEFF"+[cab.join(","),...linhas].join("\n");
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download=`Relatório de Horas Extras - ${nomeMes(mes)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function exportPrint(){
+  const mes=document.getElementById("export-mes").value;
+  const lista=mes?registros.filter(r=>r.data&&r.data.startsWith(mes)):registros;
+  let totalExtrasMin=0;
+  lista.forEach(r=>{const{extrasMin}=calcularExtras(r.data,r.saida,r.retorno,r.intervalo_fruido,r.eh_feriado);totalExtrasMin+=extrasMin||0;});
+  const fmtMin=m=>`${Math.floor(m/60)}h${(m%60).toString().padStart(2,"0")}min`;
+  const linhas=lista.map(r=>{
+    const{total,extras}=calcularExtras(r.data,r.saida,r.retorno,r.intervalo_fruido,r.eh_feriado);
+    return`<tr><td>${fmtData(r.data)}</td><td>${r.dia_semana||""}</td><td>${r.motorista||""}</td>
+      <td>${r.veiculo||""}</td><td>${r.origem||""}</td><td>${r.destino||""}</td>
+      <td>${r.saida||""}</td><td>${r.retorno||""}</td><td>${total}</td><td><strong>${extras}</strong></td>
+      <td>${r.intervalo_fruido?"Sim":"Não"}</td><td>${r.eh_feriado?"Sim":"Não"}</td>
+      <td>${r.sei||""}</td><td>${r.observacoes||""}</td></tr>`;
+  }).join("");
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8">
+  <title>Relatório de Horas Extras - ${nomeMes(mes)}</title>
+  <style>body{font-family:Arial,sans-serif;font-size:11px;padding:20px}
+  h2{text-align:center;margin-bottom:4px;font-size:14px}
+  h3{text-align:center;font-size:11px;font-weight:normal;color:#555;margin-bottom:4px}
+  h4{text-align:center;font-size:11px;color:#1a7a4a;margin-bottom:16px}
+  table{width:100%;border-collapse:collapse}
+  th,td{border:1px solid #aaa;padding:5px 6px;text-align:left}
+  th{background:#dce8f5;font-weight:bold}
+  tr:nth-child(even){background:#f6f9fd}
+  @media print{.no-print{display:none}}</style></head><body>
+  <h2>Defensoria Pública do Estado de Mato Grosso do Sul</h2>
+  <h3>Relatório de Horas Extras — ${nomeMes(mes)}</h3>
+  <h4>Total de horas extras no período: ${fmtMin(totalExtrasMin)}</h4>
+  <button class="no-print" onclick="window.print()" style="margin-bottom:12px;padding:7px 18px;cursor:pointer">Imprimir / Salvar PDF</button>
+  <table><thead><tr><th>Data</th><th>Dia</th><th>Motorista</th><th>Veículo</th><th>Origem</th><th>Destino</th>
+  <th>Entrada</th><th>Saída</th><th>Total</th><th>H. Extras</th>
+  <th>Intervalo</th><th>Feriado</th><th>SEI</th><th>Obs.</th>
+  </tr></thead><tbody>${linhas}</tbody></table></body></html>`;
+  const w=window.open("","_blank"); w.document.write(html); w.document.close();
+}
+</script>
+</body>
+</html>
