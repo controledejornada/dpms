@@ -102,6 +102,20 @@ tr:hover td{background:#fafbfd}
     </div>
 
     <div id="dia-info" class="info-box" style="display:none"></div>
+    
+    <div class="grid2" style="margin-bottom:16px">
+          <div>
+            <label>Selecionar ano e mês para exportação</label>
+            <select id="export-ano" onchange="filtrarAnoExport()">
+              <option value="">Todos os anos</option>
+            </select>
+          </div>
+          <div>
+            <select id="export-mes" onchange="atualizarResumoExport()">
+              <option value="">Todos os meses</option>
+            </select>
+          </div>
+        </div>
 
     <div class="grid2" style="margin-bottom:14px">
       <div>
@@ -254,14 +268,6 @@ tr:hover td{background:#fafbfd}
               <option value="">Todos os anos</option>
             </select>
           </div>
-         <div class="grid2" style="margin-bottom:16px">
-          <div>
-            <label>Selecionar ano e mês para exportação</label>
-            <select id="export-ano" onchange="filtrarAnoExport()">
-              <option value="">Todos os anos</option>
-            </select>
-          </div>
-          <div>
             <select id="export-mes" onchange="atualizarResumoExport()">
               <option value="">Todos os meses</option>
             </select>
