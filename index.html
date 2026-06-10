@@ -7,14 +7,14 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f4f6f9;color:#1a1a1a;font-size:15px;line-height:1.6}
-header{background:#1a3a5c;color:#fff;padding:1.2rem 2rem}
+header{background:#1a5c2e;color:#fff;padding:1.2rem 2rem}
 header h1{font-size:18px;font-weight:600}
 header p{font-size:13px;opacity:.75;margin-top:2px}
 .container{max-width:920px;margin:0 auto;padding:1.5rem 1rem 3rem}
 .abas{display:flex;gap:4px;margin-bottom:1.5rem;border-bottom:1px solid #dde3ec;flex-wrap:wrap}
 .aba{padding:9px 18px;font-size:14px;cursor:pointer;border:none;background:transparent;color:#666;border-bottom:2px solid transparent;font-family:inherit;transition:color .15s}
-.aba.ativa{color:#1a3a5c;border-bottom-color:#1a3a5c;font-weight:600}
-.aba:hover{color:#1a3a5c}
+.aba.ativa{color:#1a5c2e;border-bottom-color:#1a5c2e;font-weight:600}
+.aba:hover{color:#1a5c2e}
 .card{background:#fff;border-radius:10px;border:1px solid #dde3ec;padding:1.5rem;margin-bottom:1rem}
 .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:14px}
 .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:14px}
@@ -24,22 +24,22 @@ label{display:block;font-size:12px;color:#555;margin-bottom:5px;font-weight:500}
 input[type=text],input[type=date],input[type=time],input[type=password],input[type=file],textarea,select{
   width:100%;padding:9px 12px;border:1px solid #cdd5e0;border-radius:7px;
   font-size:14px;font-family:inherit;background:#fff;color:#1a1a1a;transition:border .15s}
-input:focus,textarea:focus,select:focus{outline:none;border-color:#1a3a5c;box-shadow:0 0 0 3px rgba(26,58,92,.1)}
+input:focus,textarea:focus,select:focus{outline:none;border-color:#1a5c2e;box-shadow:0 0 0 3px rgba(26,58,92,.1)}
 textarea{resize:vertical;min-height:70px}
 .campo{margin-bottom:14px}
 .btn{padding:10px 20px;font-size:14px;cursor:pointer;border-radius:7px;border:1px solid #cdd5e0;background:#fff;color:#1a1a1a;font-family:inherit;transition:background .15s}
 .btn:hover{background:#f0f4fa}
-.btn-primary{background:#1a3a5c;color:#fff;border-color:#1a3a5c}
-.btn-primary:hover{background:#15304d}
+.btn-primary{background:#1a5c2e;color:#fff;border-color:#1a5c2e}
+.btn-primary:hover{background:#164d26}
 .btn-success{background:#1a7a4a;color:#fff;border-color:#1a7a4a}
 .btn-success:hover{background:#156040}
 .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
 .toggle-group{display:flex;gap:0;border:1px solid #cdd5e0;border-radius:7px;overflow:hidden}
 .toggle-btn{flex:1;padding:9px 10px;font-size:13px;cursor:pointer;border:none;background:#fff;color:#555;font-family:inherit;transition:background .15s;text-align:center}
-.toggle-btn.ativo{background:#1a3a5c;color:#fff;font-weight:600}
+.toggle-btn.ativo{background:#1a5c2e;color:#fff;font-weight:600}
 .sucesso{margin-top:14px;padding:11px 14px;background:#eaf7f0;color:#1a7a4a;border-radius:7px;font-size:14px}
 .erro-msg{margin-top:14px;padding:11px 14px;background:#fdecea;color:#c0392b;border-radius:7px;font-size:14px}
-.info-box{background:#e8f0fe;border-radius:7px;padding:10px 14px;font-size:13px;color:#1a3a5c;margin-bottom:14px}
+.info-box{background:#e8f5ec;border-radius:7px;padding:10px 14px;font-size:13px;color:#1a5c2e;margin-bottom:14px}
 .filtro-wrap{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
 .filtro-wrap input,.filtro-wrap select{flex:1;min-width:140px}
 .tabela-wrap{overflow-x:auto}
@@ -64,7 +64,7 @@ tr:hover td{background:#fafbfd}
 .gps-info{font-size:12px;color:#1a7a4a;margin-top:6px}
 .total-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:1.5rem}
 .total-card{background:#fff;border:1px solid #dde3ec;border-radius:8px;padding:12px 16px;text-align:center}
-.total-card .val{font-size:22px;font-weight:600;color:#1a3a5c}
+.total-card .val{font-size:22px;font-weight:600;color:#1a5c2e}
 .total-card .lbl{font-size:11px;color:#888;margin-top:2px}
 .loading{text-align:center;padding:2rem;color:#888;font-size:14px}
 @media(max-width:600px){header{padding:1rem}.container{padding:1rem .75rem 3rem}.card{padding:1rem}}
@@ -80,7 +80,7 @@ tr:hover td{background:#fafbfd}
 <div class="container">
   <div class="abas">
     <button class="aba ativa" onclick="mostrarAba('form',this)">Novo lançamento</button>
-    <button class="aba" onclick="mostrarAba('registros',this)">Registros <span id="badge-count" style="background:#e8eef7;color:#1a3a5c;font-size:11px;padding:2px 8px;border-radius:20px;margin-left:4px">0</span></button>
+    <button class="aba" onclick="mostrarAba('registros',this)">Registros <span id="badge-count" style="background:#e0f0e5;color:#1a5c2e;font-size:11px;padding:2px 8px;border-radius:20px;margin-left:4px">0</span></button>
     <button class="aba" onclick="mostrarAba('exportar',this)">Exportar</button>
   </div>
 
@@ -348,7 +348,7 @@ function verificarDia() {
     box.style.background = "#e2d9f3"; box.style.color = "#432874";
     box.textContent = `${nomeDia} — final de semana. Todas as horas contam como extras.`;
   } else {
-    box.style.background = "#e8f0fe"; box.style.color = "#1a3a5c";
+    box.style.background = "#e8f5ec"; box.style.color = "#1a5c2e";
     box.textContent = `${nomeDia} — dia útil. Horas extras após 7h trabalhadas (ou 6h30 se intervalo não fruído).`;
   }
   calcularHoras();
@@ -375,7 +375,7 @@ function calcularHoras() {
     res.style.background="#eaf7f0"; res.style.color="#1a7a4a";
     res.textContent = `⏱ Total trabalhado: ${fmt(totalMin)} | Horas extras: ${fmt(extrasMin)}`;
   } else {
-    res.style.background="#e8f0fe"; res.style.color="#1a3a5c";
+    res.style.background="#e8f5ec"; res.style.color="#1a5c2e";
     res.textContent = `⏱ Total trabalhado: ${fmt(totalMin)} | Sem horas extras`;
   }
 }
@@ -444,6 +444,14 @@ function atualizarBadge(){document.getElementById("badge-count").textContent=reg
 
 function popularMeses(){
   const meses=[...new Set(registros.map(r=>r.data?r.data.slice(0,7):""))].filter(Boolean).sort().reverse();
+  const selExpAno=document.getElementById("export-ano");
+  if(selExpAno){
+    while(selExpAno.options.length>1)selExpAno.remove(1);
+    anos.forEach(a=>{
+      const o=document.createElement("option");
+      o.value=a; o.textContent=a; selExpAno.appendChild(o);
+    });
+  }
   ["filtro-mes","export-mes"].forEach(id=>{
     const sel=document.getElementById(id); if(!sel)return;
     const val=sel.value;
