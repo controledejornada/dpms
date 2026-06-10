@@ -254,8 +254,14 @@ tr:hover td{background:#fafbfd}
               <option value="">Todos os anos</option>
             </select>
           </div>
-          <div style="flex:1;min-width:140px">
-            <label>Mês</label>
+         <div class="grid2" style="margin-bottom:16px">
+          <div>
+            <label>Selecionar ano e mês para exportação</label>
+            <select id="export-ano" onchange="filtrarAnoExport()">
+              <option value="">Todos os anos</option>
+            </select>
+          </div>
+          <div>
             <select id="export-mes" onchange="atualizarResumoExport()">
               <option value="">Todos os meses</option>
             </select>
