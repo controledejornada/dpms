@@ -241,11 +241,17 @@ tr:hover td{background:#fafbfd}
         <p class="nota">Senha padrão: <strong>dpms2026</strong></p>
       </div>
       <div id="exportar-liberado" style="display:none">
-        <div class="grid2" style="margin-bottom:16px">
-          <div>
-            <label>Selecionar mês para exportação</label>
+      <div style="display:flex;gap:12px;align-items:flex-end;margin-bottom:16px;flex-wrap:wrap">
+          <div style="flex:1;min-width:140px">
+            <label>Ano</label>
+            <select id="export-ano" onchange="filtrarAnoExport()">
+              <option value="">Todos os anos</option>
+            </select>
+          </div>
+          <div style="flex:1;min-width:140px">
+            <label>Mês</label>
             <select id="export-mes" onchange="atualizarResumoExport()">
-              <option value="">Todos os registros</option>
+              <option value="">Todos os meses</option>
             </select>
           </div>
         </div>
@@ -626,7 +632,12 @@ function nomeMes(mes){
 
 function exportCSV(){
   const mes=document.getElementById("export-mes").value;
-  const lista=mes?registros.filter(r=>r.data&&r.data.startsWith(mes)):registros;
+  const anoExp=document.getElementById("export-ano")?.value||"";
+const lista=registros.filter(r=>{
+  const okAno=!anoExp||(r.data&&r.data.startsWith(anoExp));
+  const okMes=!mes||(r.data&&r.data.startsWith(mes));
+  return okAno&&okMes;
+});
   const cab=["Data","Dia da Semana","Motorista","Veículo","Origem","Destino","Entrada","Saída","Total Trabalhado","Horas Extras","Intervalo","Feriado","SEI Nº","Latitude","Longitude","Observações"];
   const linhas=lista.map(r=>{
     const{total,extras}=calcularExtras(r.data,r.saida,r.retorno,r.intervalo_fruido,r.eh_feriado);
@@ -646,7 +657,12 @@ function exportCSV(){
 
 function exportPrint(){
   const mes=document.getElementById("export-mes").value;
-  const lista=mes?registros.filter(r=>r.data&&r.data.startsWith(mes)):registros;
+ const anoExp=document.getElementById("export-ano")?.value||"";
+const lista=registros.filter(r=>{
+  const okAno=!anoExp||(r.data&&r.data.startsWith(anoExp));
+  const okMes=!mes||(r.data&&r.data.startsWith(mes));
+  return okAno&&okMes;
+});
   let totalExtrasMin=0;
   lista.forEach(r=>{const{extrasMin}=calcularExtras(r.data,r.saida,r.retorno,r.intervalo_fruido,r.eh_feriado);totalExtrasMin+=extrasMin||0;});
   const fmtMin=m=>`${Math.floor(m/60)}h${(m%60).toString().padStart(2,"0")}min`;
@@ -666,7 +682,7 @@ function exportPrint(){
   h4{text-align:center;font-size:11px;color:#1a7a4a;margin-bottom:16px}
   table{width:100%;border-collapse:collapse}
   th,td{border:1px solid #aaa;padding:5px 6px;text-align:left}
-  th{background:#dce8f5;font-weight:bold}
+  th{background:#d4edda;font-weight:bold}
   tr:nth-child(even){background:#f6f9fd}
   @media print{.no-print{display:none}}</style></head><body>
   <h2>Defensoria Pública do Estado de Mato Grosso do Sul</h2>
