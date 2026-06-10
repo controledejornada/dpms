@@ -198,6 +198,9 @@ tr:hover td{background:#fafbfd}
         <select id="filtro-ano" onchange="filtrarAno()">
           <option value="">Todos os anos</option>
         </select>
+        <select id="filtro-ano" onchange="filtrarAno()">
+          <option value="">Todos os anos</option>
+        </select>
         <select id="filtro-mes" onchange="renderTabela()">
           <option value="">Todos os meses</option>
         </select>
@@ -445,23 +448,68 @@ async function carregarRegistros() {
 
 function atualizarBadge(){document.getElementById("badge-count").textContent=registros.length;}
 
+function filtrarAno(){
+  const ano=document.getElementById("filtro-ano").value;
+  const sel=document.getElementById("filtro-mes");
+  const meses=[...new Set(registros.map(r=>r.data?r.data.slice(0,7):""))].filter(Boolean).sort().reverse();
+  const mesFiltrados=ano?meses.filter(m=>m.startsWith(ano)):meses;
+  while(sel.options.length>1)sel.remove(1);
+  const nomes=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  mesFiltrados.forEach(m=>{
+    const[a,ms]=m.split("-");
+    const o=document.createElement("option");
+    o.value=m; o.textContent=`${nomes[parseInt(ms)]} ${a}`;
+    sel.appendChild(o);
+  });
+  renderTabela();
+}
+function filtrarAno(){
+  const ano=document.getElementById("filtro-ano").value;
+  const sel=document.getElementById("filtro-mes");
+  const meses=[...new Set(registros.map(r=>r.data?r.data.slice(0,7):""))].filter(Boolean).sort().reverse();
+  const mesFiltrados=ano?meses.filter(m=>m.startsWith(ano)):meses;
+  while(sel.options.length>1)sel.remove(1);
+  const nomes=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  mesFiltrados.forEach(m=>{
+    const[a,ms]=m.split("-");
+    const o=document.createElement("option");
+    o.value=m; o.textContent=`${nomes[parseInt(ms)]} ${a}`;
+    sel.appendChild(o);
+  });
+  renderTabela();
+}
+function filtrarAno(){
+  const ano=document.getElementById("filtro-ano").value;
+  const sel=document.getElementById("filtro-mes");
+  const meses=[...new Set(registros.map(r=>r.data?r.data.slice(0,7):""))].filter(Boolean).sort().reverse();
+  const mesFiltrados=ano?meses.filter(m=>m.startsWith(ano)):meses;
+  while(sel.options.length>1)sel.remove(1);
+  const nomes=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  mesFiltrados.forEach(m=>{
+    const[a,ms]=m.split("-");
+    const o=document.createElement("option");
+    o.value=m; o.textContent=`${nomes[parseInt(ms)]} ${a}`;
+    sel.appendChild(o);
+  });
+  renderTabela();
+}
+
 function popularMeses(){
   const meses=[...new Set(registros.map(r=>r.data?r.data.slice(0,7):""))].filter(Boolean).sort().reverse();
   const anos=[...new Set(meses.map(m=>m.slice(0,4)))].sort().reverse();
   const selAno=document.getElementById("filtro-ano");
   if(selAno){
-    const valAno=selAno.value;
     while(selAno.options.length>1)selAno.remove(1);
-    anos.forEach(a=>{const o=document.createElement("option");o.value=a;o.textContent=a;selAno.appendChild(o);});
-    if(valAno)selAno.value=valAno;
+    anos.forEach(a=>{
+      const o=document.createElement("option");
+      o.value=a; o.textContent=a; selAno.appendChild(o);
+    });
   }
   ["filtro-mes","export-mes"].forEach(id=>{
     const sel=document.getElementById(id); if(!sel)return;
     const val=sel.value;
     while(sel.options.length>1)sel.remove(1);
-    const anoFiltro=document.getElementById("filtro-ano")?.value||"";
-    const mesFiltrados=anoFiltro?meses.filter(m=>m.startsWith(anoFiltro)):meses;
-    mesFiltrados.forEach(m=>{
+    meses.forEach(m=>{
       const o=document.createElement("option"); o.value=m;
       const[ano,mes]=m.split("-");
       const nomes=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
@@ -469,6 +517,7 @@ function popularMeses(){
     });
     if(val)sel.value=val;
   });
+}
 }
 
 function filtrarAno(){
@@ -568,7 +617,8 @@ function renderTabela(){
   const mes=document.getElementById("filtro-mes")?.value||"";
   const lista=registros.filter(r=>{
     const ok=[r.motorista,r.veiculo,r.destino,r.origem,r.sei,r.data].some(v=>(v||"").toLowerCase().includes(filtro));
-    const okMes=!mes||(r.data&&r.data.startsWith(mes));
+    const anoSel=document.getElementById("filtro-ano")?.value||"";
+const okMes=(!mes||(r.data&&r.data.startsWith(mes)))&&(!anoSel||(r.data&&r.data.startsWith(anoSel)));
     return ok&&okMes;
   });
 
